@@ -42,6 +42,9 @@ public class Person {
     @DecimalMin(value = "1200",message = "Salary must be at least $ 1200")
     private BigDecimal salary;
 
+    private String photoFileName;
+
+
     public Person(Long id, String firstName, String lastName, String mailAddress, LocalDate dob, BigDecimal salary) {
         this.id = id;
         this.firstName = firstName;
@@ -49,6 +52,7 @@ public class Person {
         this.mailAddress = mailAddress;
         this.dob = dob;
         this.salary = salary;
+        this.photoFileName = photoFileName;
     }
 
 }
