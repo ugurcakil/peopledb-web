@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-
+import java.time.format.DateTimeFormatter;
 
 
 @Data
@@ -44,8 +44,15 @@ public class Person {
 
     private String photoFileName;
 
+    public static Person parse(String csvLine) {
+        String[] fields = csvLine.split(",\\s*");
+        LocalDate dob = LocalDate.parse(fields[3], DateTimeFormatter.ofPattern("M/d/yyyy"));
+        return new Person(null, fields[1], fields[2], fields[4], dob, new BigDecimal(fields[5]), null);
 
-    public Person(Long id, String firstName, String lastName, String mailAddress, LocalDate dob, BigDecimal salary) {
+    }
+
+
+    public Person(Long id, String firstName, String lastName, String mailAddress, LocalDate dob, BigDecimal salary, String photoFileName) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -54,5 +61,6 @@ public class Person {
         this.salary = salary;
         this.photoFileName = photoFileName;
     }
+
 
 }

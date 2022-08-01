@@ -1,5 +1,6 @@
 package com.ugrckl.peoplwdbweb.data;
 
+import com.ugrckl.peoplwdbweb.exception.StorageException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -10,6 +11,8 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 
 @Repository
@@ -24,7 +27,7 @@ public class FileStorageRepository {
             Path filePath = Path.of(storageFolder).resolve(originalFileName).normalize();
             Files.copy(inputStream, filePath);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new StorageException(e);
         }
     }
 
@@ -33,8 +36,18 @@ public class FileStorageRepository {
             Path filePath = Path.of(storageFolder).resolve(filename).normalize();
             return new UrlResource(filePath.toUri());
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            throw new StorageException(e);
         }
-        return null;
+    }
+
+    public void deleteAllByName(Collection<String> filenames) {
+        try {
+            for (String filename : filenames.stream().filter(f -> f != null).collect(Collectors.toSet())) {
+                Path filePath = Path.of(storageFolder).resolve(filename).normalize();
+                Files.deleteIfExists(filePath);
+            }
+        } catch (IOException e) {
+            throw new StorageException(e);
+        }
     }
 }
